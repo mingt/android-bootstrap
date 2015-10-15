@@ -29,7 +29,7 @@ public abstract class BootstrapActivity extends AppCompatActivity {
         super.setContentView(layoutResId);
 
         // Used to inject views with the Butterknife library
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     @Override

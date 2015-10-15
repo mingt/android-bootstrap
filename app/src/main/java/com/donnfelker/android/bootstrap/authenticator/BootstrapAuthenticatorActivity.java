@@ -41,8 +41,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+
 import retrofit.RetrofitError;
 import timber.log.Timber;
 
@@ -86,9 +87,9 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
     @Inject BootstrapService bootstrapService;
     @Inject Bus bus;
 
-    @InjectView(id.et_email) protected AutoCompleteTextView emailText;
-    @InjectView(id.et_password) protected EditText passwordText;
-    @InjectView(id.b_signin) protected Button signInButton;
+    @Bind(id.et_email) protected AutoCompleteTextView emailText;
+    @Bind(id.et_password) protected EditText passwordText;
+    @Bind(id.b_signin) protected Button signInButton;
 
     private final TextWatcher watcher = validationTextWatcher();
 
@@ -136,7 +137,7 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
 
         setContentView(layout.login_activity);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         emailText.setAdapter(new ArrayAdapter<String>(this,
                 simple_dropdown_item_1line, userEmailAccounts()));

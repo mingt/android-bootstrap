@@ -67,7 +67,7 @@ public class MainActivity extends BootstrapActivity {
         }
 
         // View injection with Butterknife
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         // Set up navigation drawer
         title = drawerTitle = getTitle();

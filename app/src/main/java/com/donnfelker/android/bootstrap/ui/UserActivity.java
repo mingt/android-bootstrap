@@ -8,14 +8,14 @@ import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.core.User;
 import com.squareup.picasso.Picasso;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import static com.donnfelker.android.bootstrap.core.Constants.Extra.USER;
 
 public class UserActivity extends BootstrapActivity {
 
-    @InjectView(R.id.iv_avatar) protected ImageView avatar;
-    @InjectView(R.id.tv_name) protected TextView name;
+    @Bind(R.id.iv_avatar) protected ImageView avatar;
+    @Bind(R.id.tv_name) protected TextView name;
 
     private User user;
 

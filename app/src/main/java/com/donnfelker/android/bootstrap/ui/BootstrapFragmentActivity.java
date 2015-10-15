@@ -29,7 +29,7 @@ public class BootstrapFragmentActivity extends AppCompatActivity {
     public void setContentView(final int layoutResId) {
         super.setContentView(layoutResId);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
     }
 
     @Override
