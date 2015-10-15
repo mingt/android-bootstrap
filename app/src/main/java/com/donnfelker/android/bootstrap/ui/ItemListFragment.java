@@ -2,12 +2,14 @@
 package com.donnfelker.android.bootstrap.ui;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.Loader;
+
 import android.os.Bundle;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -257,8 +259,8 @@ public abstract class ItemListFragment<E> extends Fragment
     }
 
     @Override
-    public void onLoaderReset(final Loader<List<E>> loader) {
-        // Intentionally left blank
+    public void onLoaderReset(Loader<List<E>> loader) {
+        // left empty by default
     }
 
     /**

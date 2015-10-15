@@ -27,8 +27,8 @@ public class NewsActivity extends BootstrapActivity {
             newsItem = (News) getIntent().getExtras().getSerializable(NEWS_ITEM);
         }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         setTitle(newsItem.getTitle());
 

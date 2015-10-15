@@ -29,8 +29,8 @@ public class UserActivity extends BootstrapActivity {
             user = (User) getIntent().getExtras().getSerializable(USER);
         }
 
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Picasso.with(this).load(user.getAvatarUrl())
                 .placeholder(R.drawable.gravatar_icon)

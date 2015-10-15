@@ -46,8 +46,8 @@ public class BootstrapTimerActivity extends BootstrapFragmentActivity implements
 
         setTitle(R.string.title_timer);
 
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         start.setOnClickListener(this);
         stop.setOnClickListener(this);

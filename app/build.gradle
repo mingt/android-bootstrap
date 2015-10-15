@@ -68,6 +68,11 @@ android {
     }
 
     dependencies {
+
+        // Android Support Libs
+        compile 'com.android.support:support-v4:23.0.1'
+        compile 'com.android.support:appcompat-v7:23.0.1'
+
         compile 'com.google.code.gson:gson:2.3'
 
         // Dependency Injection
@@ -93,9 +98,7 @@ android {
         // HTTP
         compile 'com.squareup.retrofit:retrofit:1.5.1'
 
-        // Android Support Libs
-        compile 'com.android.support:support-v4:23.0.1'
-        compile 'com.android.support:support-v13:23.0.1'
+
 
         // Fabric/Crashlytics
         compile('com.crashlytics.sdk.android:crashlytics:2.2.3@aar') {
