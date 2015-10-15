@@ -12,8 +12,11 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 
 import com.donnfelker.android.bootstrap.BootstrapApplication;
+import com.donnfelker.android.bootstrap.DaggerBootstrapComponent;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.ui.BootstrapTimerActivity;
+import com.donnfelker.android.bootstrap.util.Strings;
+import com.donnfelker.android.bootstrap.util.TimeUtil;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
@@ -37,6 +40,8 @@ public class TimerService extends Service {
     private boolean isPaused;
 
     public static final int TICK_WHAT = 2;
+    private NotificationCompat.Builder b;
+    private String messageFormat;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -86,6 +91,7 @@ public class TimerService extends Service {
 
     @Produce
     public TimerTickEvent produceTickEvent() {
+        updateNotification(getTimerRunningMessage(currentRunningTimeInMillis));
         return new TimerTickEvent(currentRunningTimeInMillis);
     }
 
@@ -178,8 +184,16 @@ public class TimerService extends Service {
 
 
     private void notifyTimerRunning() {
-        updateNotification(getString(R.string.timer_running));
+        updateNotification(getTimerRunningMessage(currentRunningTimeInMillis));
         produceTimerIsPausedEvent();
+    }
+
+    private String getTimerRunningMessage(long millis) {
+        if(Strings.isEmpty(messageFormat)) {
+            messageFormat = getString(R.string.timer_running);
+        }
+
+        return String.format(messageFormat, TimeUtil.formatTime(millis));
     }
 
 
@@ -199,15 +213,33 @@ public class TimerService extends Service {
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
 
-        return new NotificationCompat.Builder(this)
-                .setContentTitle(getString(R.string.app_name))
-                .setSmallIcon(R.drawable.ic_stat_ab_notification)
-                .setContentText(message)
-                .setAutoCancel(false)
-                .setOnlyAlertOnce(true)
-                .setOngoing(true)
-                .setWhen(System.currentTimeMillis())
-                .setContentIntent(pendingIntent)
-                .getNotification();
+        if(Strings.notEmpty(message)) {
+            return getNotificationBuilder(message, pendingIntent)
+                    .setContentText(message)
+                    .build();
+        } else {
+            return getNotificationBuilder(message, pendingIntent).build();
+        }
+    }
+
+    /**
+     * Resuse the same notification builder.
+     * @param message
+     * @param pendingIntent
+     * @return
+     */
+    private NotificationCompat.Builder getNotificationBuilder(String message, PendingIntent pendingIntent) {
+        if(b == null) {
+            b = new NotificationCompat.Builder(this)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setSmallIcon(R.drawable.ic_stat_ab_notification)
+                    .setContentText(message)
+                    .setAutoCancel(false)
+                    .setOnlyAlertOnce(true)
+                    .setOngoing(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentIntent(pendingIntent);
+        }
+        return b;
     }
 }
