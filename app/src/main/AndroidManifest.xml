@@ -73,10 +73,10 @@
         <activity android:name=".ui.NewsActivity" />
         <activity android:name=".ui.UserActivity" android:label="@string/app_name" />
 
-        <!-- Replace with your fabric crashlytics key, do not use this one, you will not have access to these reports. -->
+        <!-- Replace with your Fabric Crashlytics key from Fabric.io -->
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="7ba1725538a4afd002fb073a58cca7c3ba71dc84" />
+            android:value="${fabricCrashlyticsApiKey}" />
     </application>
 
 </manifest>
