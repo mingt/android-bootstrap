@@ -1,12 +1,11 @@
 package com.donnfelker.android.bootstrap.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 
 import butterknife.ButterKnife;
 
@@ -22,7 +21,7 @@ public abstract class BootstrapActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
     }
 
     @Override

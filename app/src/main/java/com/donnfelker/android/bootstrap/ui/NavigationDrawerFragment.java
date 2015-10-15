@@ -20,7 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.events.NavItemSelectedEvent;
 import com.donnfelker.android.bootstrap.util.UIUtils;
@@ -70,7 +70,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.

@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.core.User;
-import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
+
+import com.donnfelker.android.bootstrap.util.SingleTypeAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;

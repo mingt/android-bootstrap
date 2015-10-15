@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.R.id;
 import com.donnfelker.android.bootstrap.R.layout;
@@ -32,7 +32,7 @@ import com.donnfelker.android.bootstrap.core.User;
 import com.donnfelker.android.bootstrap.events.UnAuthorizedErrorEvent;
 import com.donnfelker.android.bootstrap.ui.TextWatcherAdapter;
 import com.donnfelker.android.bootstrap.util.SafeAsyncTask;
-import com.github.kevinsawicki.wishlist.Toaster;
+import com.donnfelker.android.bootstrap.util.Toaster;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -123,7 +123,7 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
 
         accountManager = AccountManager.get(this);
 

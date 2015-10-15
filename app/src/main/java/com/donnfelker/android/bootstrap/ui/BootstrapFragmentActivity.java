@@ -1,10 +1,9 @@
 package com.donnfelker.android.bootstrap.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -23,7 +22,7 @@ public class BootstrapFragmentActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
     }
 
     @Override

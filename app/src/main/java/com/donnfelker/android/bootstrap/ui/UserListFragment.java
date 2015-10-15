@@ -8,12 +8,13 @@ import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ListView;
 
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.donnfelker.android.bootstrap.BootstrapServiceProvider;
-import com.donnfelker.android.bootstrap.Injector;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.authenticator.LogoutService;
 import com.donnfelker.android.bootstrap.core.User;
-import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
+import com.donnfelker.android.bootstrap.util.SingleTypeAdapter;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ public class UserListFragment extends ItemListFragment<User> {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
     }
 
     @Override

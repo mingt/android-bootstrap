@@ -27,9 +27,9 @@ import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.R.id;
 import com.donnfelker.android.bootstrap.R.layout;
 import com.donnfelker.android.bootstrap.authenticator.LogoutService;
-import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
-import com.github.kevinsawicki.wishlist.Toaster;
-import com.github.kevinsawicki.wishlist.ViewUtils;
+import com.donnfelker.android.bootstrap.util.SingleTypeAdapter;
+import com.donnfelker.android.bootstrap.util.Toaster;
+import com.donnfelker.android.bootstrap.util.ViewUtils;
 
 import java.util.Collections;
 import java.util.List;
