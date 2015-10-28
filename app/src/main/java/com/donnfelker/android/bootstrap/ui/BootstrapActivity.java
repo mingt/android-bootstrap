@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.donnfelker.android.bootstrap.BootstrapApplication;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
@@ -17,11 +20,25 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
  */
 public abstract class BootstrapActivity extends AppCompatActivity {
 
+    @Inject protected Bus bus;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         BootstrapApplication.component().inject(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bus.unregister(this);
     }
 
     @Override
