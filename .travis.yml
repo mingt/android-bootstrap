@@ -1,6 +1,8 @@
 # Use container based builds
 sudo: false
 
+script: ./gradlew build test
+
 # Lang type
 language: android
 
