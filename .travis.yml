@@ -1,5 +1,11 @@
+# Use container based builds
+sudo: false
+
+# Lang type
 language: android
+
 #- echo yes | android update sdk -a -t tools,platform-tools,extra-android-support,extra-android-m2repository,android-19,build-tools-19.1.0,extra-google-google_play_services,extra-google-m2repository --force --no-ui
+
 android:
   components:
     # latest version of the tools
