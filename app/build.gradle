@@ -27,8 +27,10 @@ def computeVersionCode() {
 
     if (System.env.BUILD_NUMBER) {              // Check if there is a system build number.
         return "$System.env.BUILD_NUMBER".toInteger()
-    } else if (System.env.CIRCLE_BUILD_NUM) {   // Check to see if this is built on circle CI
+    } else if (System.env.CIRCLE_BUILD_NUM) {   // Check to see if this is built on Circle CI
         return "$System.env.CIRCLE_BUILD_NUM".toInteger()
+    } else if (System.env.TRAVIS_BUILD_NUMBER) {   // Check to see if this is built on Travis CI
+        return "$System.env.TRAVIS_BUILD_NUMBER".toInteger()
     } else {
         return 1                                // if none is found, default to 1.
     }
@@ -58,7 +60,7 @@ android {
         // buildConfigField "String", "GIT_SHA", "\"${gitSha}\""
 
         manifestPlaceholders = [
-                fabricCrashlyticsApiKey: crashlyticsApiKey   // Set this in your ~/.gradle/gradle.properties as: crashlyticsApiKey or use "$System.env.CRASHLYTICS_API_KEY"  to use a env variable (and then set that value, of course)
+                fabricCrashlyticsApiKey: $System.env.CRASHLYTICS_API_KEY   // Set this in your ~/.gradle/gradle.properties as: crashlyticsApiKey or use "$System.env.CRASHLYTICS_API_KEY"  to use a env variable (and then set that value, of course)
         ]
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
