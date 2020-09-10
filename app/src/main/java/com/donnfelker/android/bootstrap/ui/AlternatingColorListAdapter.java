@@ -5,7 +5,8 @@ import android.view.LayoutInflater;
 
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.R.drawable;
-import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
+import com.donnfelker.android.bootstrap.util.SingleTypeAdapter;
+
 
 import java.util.List;
 

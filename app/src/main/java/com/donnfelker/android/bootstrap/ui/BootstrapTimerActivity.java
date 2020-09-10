@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.core.PauseTimerEvent;
 import com.donnfelker.android.bootstrap.core.ResumeTimerEvent;
@@ -18,12 +19,13 @@ import com.donnfelker.android.bootstrap.core.StopTimerEvent;
 import com.donnfelker.android.bootstrap.core.TimerPausedEvent;
 import com.donnfelker.android.bootstrap.core.TimerService;
 import com.donnfelker.android.bootstrap.core.TimerTickEvent;
+import com.donnfelker.android.bootstrap.util.TimeUtil;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -32,15 +34,17 @@ public class BootstrapTimerActivity extends BootstrapFragmentActivity implements
 
     @Inject Bus eventBus;
 
-    @InjectView(R.id.chronometer) protected TextView chronometer;
-    @InjectView(R.id.start) protected Button start;
-    @InjectView(R.id.stop) protected Button stop;
-    @InjectView(R.id.pause) protected Button pause;
-    @InjectView(R.id.resume) protected Button resume;
+    @Bind(R.id.chronometer) protected TextView chronometer;
+    @Bind(R.id.start) protected Button start;
+    @Bind(R.id.stop) protected Button stop;
+    @Bind(R.id.pause) protected Button pause;
+    @Bind(R.id.resume) protected Button resume;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BootstrapApplication.component().inject(this);
 
         setContentView(R.layout.bootstrap_timer);
 
@@ -215,23 +219,9 @@ public class BootstrapTimerActivity extends BootstrapFragmentActivity implements
      * @param millis the elapsed time
      */
     private void setFormattedTime(long millis) {
-        final String formattedTime = formatTime(millis);
+        final String formattedTime = TimeUtil.formatTime(millis);
         chronometer.setText(formattedTime);
     }
 
-    /**
-     * Formats the time to look like "HH:MM:SS"
-     *
-     * @param millis The number of elapsed milliseconds
-     * @return A formatted time value
-     */
-    public static String formatTime(final long millis) {
-        //TODO does not support hour>=100 (4.1 days)
-        return String.format("%02d:%02d:%02d",
-                millis / (1000 * 60 * 60),
-                (millis / (1000 * 60)) % 60,
-                (millis / 1000) % 60
-        );
-    }
 
 }

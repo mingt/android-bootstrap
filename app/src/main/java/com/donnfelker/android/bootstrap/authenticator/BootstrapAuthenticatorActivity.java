@@ -1,13 +1,5 @@
 package com.donnfelker.android.bootstrap.authenticator;
 
-import static android.R.layout.simple_dropdown_item_1line;
-import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
-import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
-import static android.accounts.AccountManager.KEY_AUTHTOKEN;
-import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
-import static android.view.KeyEvent.ACTION_DOWN;
-import static android.view.KeyEvent.KEYCODE_ENTER;
-import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Dialog;
@@ -29,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.R.id;
 import com.donnfelker.android.bootstrap.R.layout;
@@ -39,19 +31,30 @@ import com.donnfelker.android.bootstrap.core.Constants;
 import com.donnfelker.android.bootstrap.core.User;
 import com.donnfelker.android.bootstrap.events.UnAuthorizedErrorEvent;
 import com.donnfelker.android.bootstrap.ui.TextWatcherAdapter;
-import com.donnfelker.android.bootstrap.util.Ln;
 import com.donnfelker.android.bootstrap.util.SafeAsyncTask;
-import com.github.kevinsawicki.wishlist.Toaster;
+import com.donnfelker.android.bootstrap.util.Toaster;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.InjectView;
-import butterknife.Views;
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import retrofit.RetrofitError;
+import timber.log.Timber;
+
+import static android.R.layout.simple_dropdown_item_1line;
+import static android.accounts.AccountManager.KEY_ACCOUNT_NAME;
+import static android.accounts.AccountManager.KEY_ACCOUNT_TYPE;
+import static android.accounts.AccountManager.KEY_AUTHTOKEN;
+import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
+import static android.view.KeyEvent.ACTION_DOWN;
+import static android.view.KeyEvent.KEYCODE_ENTER;
+import static android.view.inputmethod.EditorInfo.IME_ACTION_DONE;
 
 /**
  * Activity to authenticate the user against an API (example API on Parse.com)
@@ -84,9 +87,9 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
     @Inject BootstrapService bootstrapService;
     @Inject Bus bus;
 
-    @InjectView(id.et_email) protected AutoCompleteTextView emailText;
-    @InjectView(id.et_password) protected EditText passwordText;
-    @InjectView(id.b_signin) protected Button signInButton;
+    @Bind(id.et_email) protected AutoCompleteTextView emailText;
+    @Bind(id.et_password) protected EditText passwordText;
+    @Bind(id.b_signin) protected Button signInButton;
 
     private final TextWatcher watcher = validationTextWatcher();
 
@@ -121,7 +124,7 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
 
         accountManager = AccountManager.get(this);
 
@@ -134,7 +137,7 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
 
         setContentView(layout.login_activity);
 
-        Views.inject(this);
+        ButterKnife.bind(this);
 
         emailText.setAdapter(new ArrayAdapter<String>(this,
                 simple_dropdown_item_1line, userEmailAccounts()));
@@ -318,13 +321,14 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
     protected void finishLogin() {
         final Account account = new Account(email, Constants.Auth.BOOTSTRAP_ACCOUNT_TYPE);
 
+        authToken = token;
+
         if (requestNewAccount) {
             accountManager.addAccountExplicitly(account, password, null);
+            accountManager.setAuthToken(account, Constants.Auth.BOOTSTRAP_ACCOUNT_TYPE, authToken);
         } else {
             accountManager.setPassword(account, password);
         }
-
-        authToken = token;
 
         final Intent intent = new Intent();
         intent.putExtra(KEY_ACCOUNT_NAME, email);
@@ -369,7 +373,7 @@ public class BootstrapAuthenticatorActivity extends ActionBarAccountAuthenticato
                 finishConfirmCredentials(true);
             }
         } else {
-            Ln.d("onAuthenticationResult: failed to authenticate");
+            Timber.d("onAuthenticationResult: failed to authenticate");
             if (requestNewAccount) {
                 Toaster.showLong(BootstrapAuthenticatorActivity.this,
                         string.message_auth_failed_new_account);

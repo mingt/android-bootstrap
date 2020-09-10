@@ -1,5 +1,6 @@
 package com.donnfelker.android.bootstrap.ui;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,18 +11,18 @@ import android.view.ViewGroup;
 import com.donnfelker.android.bootstrap.R;
 import com.viewpagerindicator.TitlePageIndicator;
 
-import butterknife.InjectView;
-import butterknife.Views;
+import butterknife.ButterKnife;
+import butterknife.Bind;
 
 /**
  * Fragment which houses the View pager.
  */
 public class CarouselFragment extends Fragment {
 
-    @InjectView(R.id.tpi_header)
+    @Bind(R.id.tpi_header)
     protected TitlePageIndicator indicator;
 
-    @InjectView(R.id.vp_pages)
+    @Bind(R.id.vp_pages)
     protected ViewPager pager;
 
     @Override
@@ -33,7 +34,7 @@ public class CarouselFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Views.inject(this, getView());
+        ButterKnife.bind(this, getView());
 
         pager.setAdapter(new BootstrapPagerAdapter(getResources(), getChildFragmentManager()));
         indicator.setViewPager(pager);

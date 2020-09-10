@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 
-import com.donnfelker.android.bootstrap.util.Ln;
 import com.donnfelker.android.bootstrap.util.Strings;
 
 import java.lang.reflect.Method;
@@ -14,6 +13,8 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import timber.log.Timber;
 
 
 /**
@@ -40,10 +41,17 @@ public class UserAgentProvider implements Provider<String> {
 
     private static final String APP_NAME = "Android Bootstrap";
 
-    @Inject protected ApplicationInfo appInfo;
-    @Inject protected PackageInfo info;
-    @Inject protected TelephonyManager telephonyManager;
-    @Inject protected ClassLoader classLoader;
+    protected ApplicationInfo appInfo;
+    protected PackageInfo info;
+    protected TelephonyManager telephonyManager;
+    protected ClassLoader classLoader;
+
+    public UserAgentProvider(ApplicationInfo appInfo, PackageInfo info, TelephonyManager telephonyManager, ClassLoader classLoader) {
+        this.appInfo = appInfo;
+        this.info = info;
+        this.telephonyManager = telephonyManager;
+        this.classLoader = classLoader;
+    }
 
     protected String userAgent;
 
@@ -74,7 +82,7 @@ public class UserAgentProvider implements Provider<String> {
                         final Method get = SystemProperties.getMethod("get", String.class);
                         params.add("clientidbase=" + get.invoke(SystemProperties, "ro.com.google.clientidbase"));
                     } catch (Exception ignored) {
-                        Ln.d(ignored);
+                        Timber.d(ignored, ignored.getMessage());
                     }
 
 

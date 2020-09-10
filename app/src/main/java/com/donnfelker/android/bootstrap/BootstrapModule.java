@@ -2,25 +2,19 @@ package com.donnfelker.android.bootstrap;
 
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.telephony.TelephonyManager;
 
 import com.donnfelker.android.bootstrap.authenticator.ApiKeyProvider;
-import com.donnfelker.android.bootstrap.authenticator.BootstrapAuthenticatorActivity;
 import com.donnfelker.android.bootstrap.authenticator.LogoutService;
+import com.donnfelker.android.bootstrap.authenticator.LogoutServiceImpl;
 import com.donnfelker.android.bootstrap.core.BootstrapService;
 import com.donnfelker.android.bootstrap.core.Constants;
 import com.donnfelker.android.bootstrap.core.PostFromAnyThreadBus;
 import com.donnfelker.android.bootstrap.core.RestAdapterRequestInterceptor;
 import com.donnfelker.android.bootstrap.core.RestErrorHandler;
-import com.donnfelker.android.bootstrap.core.TimerService;
 import com.donnfelker.android.bootstrap.core.UserAgentProvider;
-import com.donnfelker.android.bootstrap.ui.BootstrapTimerActivity;
-import com.donnfelker.android.bootstrap.ui.CheckInsListFragment;
-import com.donnfelker.android.bootstrap.ui.MainActivity;
-import com.donnfelker.android.bootstrap.ui.NavigationDrawerFragment;
-import com.donnfelker.android.bootstrap.ui.NewsActivity;
-import com.donnfelker.android.bootstrap.ui.NewsListFragment;
-import com.donnfelker.android.bootstrap.ui.UserActivity;
-import com.donnfelker.android.bootstrap.ui.UserListFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.otto.Bus;
@@ -36,23 +30,7 @@ import retrofit.converter.GsonConverter;
  * Dagger module for setting up provides statements.
  * Register all of your entry points below.
  */
-@Module(
-        complete = false,
-
-        injects = {
-                BootstrapApplication.class,
-                BootstrapAuthenticatorActivity.class,
-                MainActivity.class,
-                BootstrapTimerActivity.class,
-                CheckInsListFragment.class,
-                NavigationDrawerFragment.class,
-                NewsActivity.class,
-                NewsListFragment.class,
-                UserActivity.class,
-                UserListFragment.class,
-                TimerService.class
-        }
-)
+@Module
 public class BootstrapModule {
 
     @Singleton
@@ -64,7 +42,7 @@ public class BootstrapModule {
     @Provides
     @Singleton
     LogoutService provideLogoutService(final Context context, final AccountManager accountManager) {
-        return new LogoutService(context, accountManager);
+        return new LogoutServiceImpl(context, accountManager);
     }
 
     @Provides
@@ -74,7 +52,7 @@ public class BootstrapModule {
 
     @Provides
     BootstrapServiceProvider provideBootstrapServiceProvider(RestAdapter restAdapter, ApiKeyProvider apiKeyProvider) {
-        return new BootstrapServiceProvider(restAdapter, apiKeyProvider);
+        return new BootstrapServiceProviderImpl(restAdapter, apiKeyProvider);
     }
 
     @Provides
@@ -102,6 +80,11 @@ public class BootstrapModule {
     @Provides
     RestErrorHandler provideRestErrorHandler(Bus bus) {
         return new RestErrorHandler(bus);
+    }
+
+    @Provides
+    UserAgentProvider providesUserAgentProvider(ApplicationInfo appInfo, PackageInfo packageInfo, TelephonyManager telephonyManager, ClassLoader classLoader) {
+        return new UserAgentProvider(appInfo, packageInfo, telephonyManager, classLoader);
     }
 
     @Provides

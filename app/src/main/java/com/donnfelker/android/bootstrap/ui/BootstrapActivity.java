@@ -2,12 +2,15 @@ package com.donnfelker.android.bootstrap.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
+import com.squareup.otto.Bus;
 
-import butterknife.Views;
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
@@ -15,13 +18,27 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 /**
  * Base activity for a Bootstrap activity which does not use fragments.
  */
-public abstract class BootstrapActivity extends ActionBarActivity {
+public abstract class BootstrapActivity extends AppCompatActivity {
+
+    @Inject protected Bus bus;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bus.unregister(this);
     }
 
     @Override
@@ -29,7 +46,7 @@ public abstract class BootstrapActivity extends ActionBarActivity {
         super.setContentView(layoutResId);
 
         // Used to inject views with the Butterknife library
-        Views.inject(this);
+        ButterKnife.bind(this);
     }
 
     @Override

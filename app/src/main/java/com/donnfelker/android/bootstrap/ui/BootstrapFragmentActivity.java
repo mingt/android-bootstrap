@@ -1,36 +1,35 @@
 package com.donnfelker.android.bootstrap.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
-import com.donnfelker.android.bootstrap.Injector;
+import com.donnfelker.android.bootstrap.BootstrapApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
-import butterknife.Views;
+import butterknife.ButterKnife;
+
 
 /**
  * Base class for all Bootstrap Activities that need fragments.
  */
-public class BootstrapFragmentActivity extends ActionBarActivity {
+public class BootstrapFragmentActivity extends AppCompatActivity {
 
-    @Inject
-    protected Bus eventBus;
+    @Inject protected Bus eventBus;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Injector.inject(this);
+        BootstrapApplication.component().inject(this);
     }
 
     @Override
     public void setContentView(final int layoutResId) {
         super.setContentView(layoutResId);
 
-        Views.inject(this);
+        ButterKnife.bind(this);
     }
 
     @Override

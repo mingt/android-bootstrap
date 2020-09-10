@@ -3,28 +3,35 @@
 package com.donnfelker.android.bootstrap.ui;
 
 import android.accounts.OperationCanceledException;
+
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
+
 import android.support.v4.app.FragmentManager;
+
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import com.donnfelker.android.bootstrap.BootstrapApplication;
+import com.donnfelker.android.bootstrap.BootstrapComponent;
 import com.donnfelker.android.bootstrap.BootstrapServiceProvider;
 import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.core.BootstrapService;
 import com.donnfelker.android.bootstrap.events.NavItemSelectedEvent;
-import com.donnfelker.android.bootstrap.util.Ln;
 import com.donnfelker.android.bootstrap.util.SafeAsyncTask;
 import com.donnfelker.android.bootstrap.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Views;
+import butterknife.ButterKnife;
+import timber.log.Timber;
 
 
 /**
@@ -33,9 +40,9 @@ import butterknife.Views;
  * If you need to remove the authentication from the application please see
  * {@link com.donnfelker.android.bootstrap.authenticator.ApiKeyProvider#getAuthKey(android.app.Activity)}
  */
-public class MainActivity extends BootstrapFragmentActivity {
+public class MainActivity extends BootstrapActivity {
 
-    @Inject protected BootstrapServiceProvider serviceProvider;
+    @Inject BootstrapServiceProvider serviceProvider;
 
     private boolean userHasAuthenticated = false;
 
@@ -51,6 +58,7 @@ public class MainActivity extends BootstrapFragmentActivity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         super.onCreate(savedInstanceState);
+        BootstrapApplication.component().inject(this);
 
         if(isTablet()) {
             setContentView(R.layout.main_activity_tablet);
@@ -59,7 +67,7 @@ public class MainActivity extends BootstrapFragmentActivity {
         }
 
         // View injection with Butterknife
-        Views.inject(this);
+        ButterKnife.bind(this);
 
         // Set up navigation drawer
         title = drawerTitle = getTitle();
@@ -69,22 +77,27 @@ public class MainActivity extends BootstrapFragmentActivity {
             drawerToggle = new ActionBarDrawerToggle(
                     this,                    /* Host activity */
                     drawerLayout,           /* DrawerLayout object */
-                    R.drawable.ic_drawer,    /* nav drawer icon to replace 'Up' caret */
                     R.string.navigation_drawer_open,    /* "open drawer" description */
                     R.string.navigation_drawer_close) { /* "close drawer" description */
 
                 /** Called when a drawer has settled in a completely closed state. */
                 public void onDrawerClosed(View view) {
                     getSupportActionBar().setTitle(title);
-                    supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    syncState();
                 }
 
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     getSupportActionBar().setTitle(drawerTitle);
-                    supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                    syncState();
                 }
             };
+
+            if(!isTablet()) {
+                drawerToggle.syncState();
+            }
 
             // Set the drawer toggle as the DrawerListener
             drawerLayout.setDrawerListener(drawerToggle);
@@ -112,17 +125,6 @@ public class MainActivity extends BootstrapFragmentActivity {
     }
 
     @Override
-    protected void onPostCreate(final Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        if(!isTablet()) {
-            // Sync the toggle state after onRestoreInstanceState has occurred.
-            drawerToggle.syncState();
-        }
-    }
-
-
-    @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if(!isTablet()) {
@@ -134,7 +136,6 @@ public class MainActivity extends BootstrapFragmentActivity {
     private void initScreen() {
         if (userHasAuthenticated) {
 
-            Ln.d("Foo");
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, new CarouselFragment())
@@ -198,7 +199,7 @@ public class MainActivity extends BootstrapFragmentActivity {
     @Subscribe
     public void onNavigationItemSelected(NavItemSelectedEvent event) {
 
-        Ln.d("Selected: %1$s", event.getItemPosition());
+        Timber.d("Selected: %1$s", event.getItemPosition());
 
         switch(event.getItemPosition()) {
             case 0:

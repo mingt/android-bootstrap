@@ -2,12 +2,14 @@
 package com.donnfelker.android.bootstrap.ui;
 
 import android.app.Activity;
+
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,9 +27,9 @@ import com.donnfelker.android.bootstrap.R;
 import com.donnfelker.android.bootstrap.R.id;
 import com.donnfelker.android.bootstrap.R.layout;
 import com.donnfelker.android.bootstrap.authenticator.LogoutService;
-import com.github.kevinsawicki.wishlist.SingleTypeAdapter;
-import com.github.kevinsawicki.wishlist.Toaster;
-import com.github.kevinsawicki.wishlist.ViewUtils;
+import com.donnfelker.android.bootstrap.util.SingleTypeAdapter;
+import com.donnfelker.android.bootstrap.util.Toaster;
+import com.donnfelker.android.bootstrap.util.ViewUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +42,7 @@ import java.util.List;
  * @param <E>
  */
 public abstract class ItemListFragment<E> extends Fragment
-        implements LoaderCallbacks<List<E>> {
+        implements LoaderManager.LoaderCallbacks<List<E>> {
 
     private static final String FORCE_REFRESH = "forceRefresh";
 
@@ -201,13 +203,9 @@ public abstract class ItemListFragment<E> extends Fragment
             return;
         }
 
-        getActionBarActivity().setSupportProgressBarIndeterminateVisibility(true);
+        getActivity().setProgressBarIndeterminateVisibility(true);
 
         getLoaderManager().restartLoader(0, args, this);
-    }
-
-    private ActionBarActivity getActionBarActivity() {
-        return ((ActionBarActivity) getActivity());
     }
 
     /**
@@ -220,7 +218,7 @@ public abstract class ItemListFragment<E> extends Fragment
 
     public void onLoadFinished(final Loader<List<E>> loader, final List<E> items) {
 
-        getActionBarActivity().setSupportProgressBarIndeterminateVisibility(false);
+        getActivity().setProgressBarIndeterminateVisibility(false);
 
         final Exception exception = getException(loader);
         if (exception != null) {
@@ -261,8 +259,8 @@ public abstract class ItemListFragment<E> extends Fragment
     }
 
     @Override
-    public void onLoaderReset(final Loader<List<E>> loader) {
-        // Intentionally left blank
+    public void onLoaderReset(Loader<List<E>> loader) {
+        // left empty by default
     }
 
     /**
